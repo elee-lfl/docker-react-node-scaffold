@@ -1,9 +1,12 @@
-read "Project name" PROJECT_NAME
-read "Project description" PROJECT_DESCRIPTION
-read "Dockerhub user" DOCKERHUB_USER
+#!/bin/sh
 
-find . -type f -name "*.*" | xargs sed -i "s/<PROJECT_NAME>/$PROJECT_NAME/g"
-find . -type f -name "*.*" | xargs sed -i "s/<PROJECT_DESCRIPTION>/$PROJECT_DESCRIPTION/g"
-find . -type f -name "*.*" | xargs sed -i "s/<DOCKERHUB_USER>/$DOCKERHUB_USER/g"
+echo "Please enter project name:"
+read PROJECT_NAME
+echo "Please enter Dockerhub User:"
+read DOCKER_USER
 
-sed "s/<TAG>/$SHA1/" < Dockerrun.aws.json.template > $DOCKERRUN_FILE
+LC_ALL=C find . -type f ! -path "*.git*" ! -name '*.png' ! -name 'setup' | xargs sed -i '' -e "s/<PROJECT_NAME>/$PROJECT_NAME/g"
+LC_ALL=C find . -type f ! -path "*.git*" ! -name '*.png' ! -name 'setup' | xargs sed -i '' -e "s/<DOCKER_USER>/$DOCKER_USER/g"
+
+
+echo "Ready to rock!"
