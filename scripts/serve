@@ -1,0 +1,11 @@
+#!/bin/sh
+
+MACHINE_NAME="<$PROJECT_NAME>"
+CONTAINER_NAME_WEB=$MACHINE_NAME"_web_1"
+CONTAINER_NAME_SERVER=$MACHINE_NAME"_server_1"
+
+./scripts/runenv
+
+# Enter the docker machine
+echo "Starting development server..."
+docker exec -ti $CONTAINER_NAME_WEB /usr/local/bin/gulp serve --color & docker exec -ti $CONTAINER_NAME_SERVER /usr/local/bin/gulp serve --color

@@ -1,0 +1,49 @@
+{
+  "AWSEBDockerrunVersion": "2",
+  "authentication": {
+    "bucket": "<PROJECT_NAME>",
+    "key": ".dockercfg.json"
+  },
+  "volumes": [
+    {
+      "name": "node"
+    },
+    {
+      "name": "web"
+    }
+  ],
+  "containerDefinitions": [
+    {
+      "name": "node",
+      "image": "<DOCKER_USER>/<PROJECT_NAME>_node:<TAG>",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 8080,
+          "containerPort": 8080
+        }
+      ]
+    },
+    {
+      "name": "web",
+      "image": "<DOCKER_USER>/<PROJECT_NAME>_web:<TAG>",
+      "essential": true,
+      "memory": 128,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        },
+        {
+          "hostPort": 443,
+          "containerPort": 443
+        }
+      ],
+      "links": [
+        "node"
+      ]
+    }
+  ],
+  "logging": "/var/log"
+}

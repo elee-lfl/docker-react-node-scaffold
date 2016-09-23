@@ -1,0 +1,27 @@
+#!/bin/sh
+
+MACHINE_NAME="<$PROJECT_NAME>"
+CONTAINER_NAME_WEB=$MACHINE_NAME"_web_1"
+CONTAINER_NAME_SERVER=$MACHINE_NAME"_server_1"
+
+# Enter docker env
+./scripts/runenv
+
+# Install dependencies. Since reading / writing to volumes is slow and makes the
+# `npm install` command take forever, we're going to install to a temp directory
+# in the docker container and then copy the packages back to our working dir
+# once the install has been completed.
+
+echo "Installing dependencies for web..."
+docker exec -ti $CONTAINER_NAME_WEB mkdir /node_temp
+docker exec -ti $CONTAINER_NAME_WEB cp package.json /node_temp/
+docker exec -ti $CONTAINER_NAME_WEB /bin/bash -c "cd /node_temp && npm install"
+docker exec -ti $CONTAINER_NAME_WEB cp -rv /node_temp/node_modules /code
+docker exec -ti $CONTAINER_NAME_WEB rm -rvf /node_temp
+
+echo "Installing dependencies for server..."
+docker exec -ti $CONTAINER_NAME_SERVER mkdir /node_temp
+docker exec -ti $CONTAINER_NAME_SERVER cp package.json /node_temp/
+docker exec -ti $CONTAINER_NAME_SERVER /bin/bash -c "cd /node_temp && npm install"
+docker exec -ti $CONTAINER_NAME_SERVER cp -rv /node_temp/node_modules /code
+docker exec -ti $CONTAINER_NAME_SERVER rm -rvf /node_temp

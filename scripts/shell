@@ -1,0 +1,12 @@
+#!/bin/sh
+
+name=$1
+
+MACHINE_NAME="<PROJECT_NAME>"
+CONTAINER_NAME=$MACHINE_NAME"_"$name"_1"
+
+./scripts/runenv
+
+# Enter the docker machine
+echo "Entering shell..."
+docker exec -ti $CONTAINER_NAME /bin/bash

@@ -1,0 +1,9 @@
+read "Project name" PROJECT_NAME
+read "Project description" PROJECT_DESCRIPTION
+read "Dockerhub user" DOCKERHUB_USER
+
+find . -type f -name "*.*" | xargs sed -i "s/<PROJECT_NAME>/$PROJECT_NAME/g"
+find . -type f -name "*.*" | xargs sed -i "s/<PROJECT_DESCRIPTION>/$PROJECT_DESCRIPTION/g"
+find . -type f -name "*.*" | xargs sed -i "s/<DOCKERHUB_USER>/$DOCKERHUB_USER/g"
+
+sed "s/<TAG>/$SHA1/" < Dockerrun.aws.json.template > $DOCKERRUN_FILE

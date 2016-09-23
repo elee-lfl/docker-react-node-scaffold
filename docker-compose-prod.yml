@@ -1,0 +1,15 @@
+version: '2'
+services:
+  web:
+    build: docker/prod/web
+    ports:
+      - "80:80"
+      - "443:443"
+    links:
+      - node:node
+    tty: true
+  node:
+    build: docker/prod/node
+    ports:
+      - "8080:8080"
+    tty: true

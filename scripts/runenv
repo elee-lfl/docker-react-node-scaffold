@@ -1,0 +1,35 @@
+#!/bin/sh
+
+MACHINE_NAME="<$PROJECT_NAME>"
+MACHINE_GREP="'^$"$MACHINE_NAME"$'"
+CONTAINER_NAME=$MACHINE_NAME"_dev_1"
+
+docker-machine --version >/dev/null 2>&1 || { echo >&2 "\nIt looks like Docker isn't installed on your machine. You're going to need it: https://docs.docker.com/engine/installation/\n"; exit 1; }
+
+# Make sure that the machine exists.
+if [[ $(docker-machine ls -q | grep $MACHINE_GREP) = $MACHINE_NAME ]]; then
+  echo "Machine exists. Proceeding..."
+else
+  echo "Machine does not exist. Creating new Docker machine...."
+  docker-machine create --driver virtualbox $MACHINE_NAME
+fi
+
+# Make sure that the machine is running.
+if [[ $(docker-machine status $MACHINE_NAME) != "Running" ]]; then
+  echo "Machine not running. Starting now..."
+  docker-machine start $MACHINE_NAME
+fi
+
+# Set environment variables
+echo "Setting environment variables..."
+eval "$(docker-machine env $MACHINE_NAME)"
+
+# Build the container if it doesn't exist
+if [[ $(docker inspect --format="{{ .State.Running }}" $CONTAINER_NAME) != "true" ]]; then
+  echo "Container not yet built. Building..."
+  docker-compose build
+fi
+
+# Start the docker container
+echo "Starting container..."
+docker-compose up -d

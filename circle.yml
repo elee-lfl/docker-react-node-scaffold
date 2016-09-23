@@ -1,0 +1,41 @@
+machine:
+    pre:
+      - sudo curl -L -o /usr/bin/docker 'https://s3-external-1.amazonaws.com/circle-downloads/docker-1.9.0-circleci'
+      - sudo chmod 0755 /usr/bin/docker
+    node:
+      version: 4.2.6
+    services:
+        - docker
+
+dependencies:
+  pre:
+    - sudo pip install awscli
+    - npm install -g gulp babel-preset-es2015 babel-preset-react mocha-junit-reporter babel-core
+    - npm install --prefix src/client
+    - npm install --prefix src/server
+  cache_directories:
+    - "node_modules"
+    - "src/client/node_modules"
+    - "src/server/node_modules"
+
+test:
+  override:
+    - mocha --compilers js:babel-core/register src/client/test/*.spec.js src/server/test/*.spec.js --reporter mocha-junit-reporter --reporter-options mochaFile=$CIRCLE_TEST_REPORTS/junit/test-results.xml
+
+deployment:
+  # prod:
+  #   branch: master
+  #   commands:
+  #     - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+  #     - ./servers/deploy.sh $CIRCLE_SHA1
+
+  staging:
+    branch: develop
+    commands:
+      #Build
+      - gulp production --gulpfile src/client/gulpfile.js
+      - gulp production --gulpfile src/server/gulpfile.js
+      - docker build -t <DOCKER_USER>/<PROJECT_NAME>_web:$CIRCLE_SHA1 docker/prod/web
+      - docker build -t <DOCKER_USER>/<PROJECT_NAME>_node:$CIRCLE_SHA1 docker/prod/node
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - ./scripts/deploy-staging.sh $CIRCLE_SHA1

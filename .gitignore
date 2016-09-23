@@ -1,0 +1,13 @@
+.DS_Store
+**/*/.DS_Store
+src/client/node_modules/
+src/server/node_modules/
+.sass-cache/
+.tmp/
+src/client/dist/
+src/client/build/
+src/server/build/
+src/server/src/config/firebase-config.js
+docker/prod/node/code
+docker/prod/web/code
+**/*/test-results.xml

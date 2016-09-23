@@ -1,0 +1,18 @@
+version: '2'
+services:
+  web:
+    build: docker/dev/web
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./src/client:/code
+    command: tail -f /dev/null
+    links:
+      - server
+  server:
+    build: docker/dev/node
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./src/server:/code
+    command: tail -f /dev/null
