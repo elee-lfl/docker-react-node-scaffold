@@ -1,5 +1,5 @@
 {
-  "name": "<PROJECT_NAME>",
+  "name": "babycharts",
   "dependencies": {
     "babel-core": "^6.14.0",
     "babel-eslint": "~6.1.2",
@@ -39,6 +39,7 @@
     "http-proxy-middleware": "^0.17.1",
     "jsdom": "^9.4.2",
     "mocha": "^3.0.2",
+    "nib": "^1.1.2",
     "react": "~15.3.0",
     "react-addons-test-utils": "^15.3.1",
     "react-cookie": "~0.4.8",

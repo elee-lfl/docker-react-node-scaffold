@@ -8,5 +8,4 @@ read DOCKER_USER
 LC_ALL=C find . -type f ! -path "*.git*" ! -name '*.png' ! -name 'setup' | xargs sed -i '' -e "s/<PROJECT_NAME>/$PROJECT_NAME/g"
 LC_ALL=C find . -type f ! -path "*.git*" ! -name '*.png' ! -name 'setup' | xargs sed -i '' -e "s/<DOCKER_USER>/$DOCKER_USER/g"
 
-
 echo "Ready to rock!"
